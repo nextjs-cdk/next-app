@@ -1,0 +1,19 @@
+@hostname = next-app-e22haopaj-nextjs-cdk.vercel.app
+@buildID = Xo7oM5XwISlbnTkAq4Y_v
+
+
+###
+POST https://{{hostname}}/_next/data/{{buildID}}/ssr-page-2.json HTTP/1.1
+
+
+
+###
+GET https://{{hostname}}/ssg-page HTTP/1.1
+
+
+###
+GET http://{{hostname}}/errored-page-new-ssr HTTP/1.1
+
+
+###
+GET http://{{hostname}}/revalidated-ssg-page HTTP/1.1

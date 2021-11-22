@@ -68,7 +68,7 @@ Cypress.Commands.add(
           throw new Error(`Response has errored with status ${res.statusCode}`);
         }
 
-        if (res.headers['x-cache'] === 'Hit from cloudfront') {
+        if (res.headers['x-vercel-cache'] === 'HIT') {
           throw new Error('Response was unexpectedly cached in CloudFront.');
         }
       });
@@ -85,7 +85,7 @@ Cypress.Commands.add(
           throw new Error(`Response has errored with status ${res.statusCode}`);
         }
 
-        if (res.headers['x-cache'] !== 'Hit from cloudfront') {
+        if (res.headers['x-vercel-cache'] !== 'HIT') {
           throw new Error('Response was unexpectedly uncached in CloudFront.');
         }
       });
@@ -140,7 +140,9 @@ Cypress.Commands.add(
           expect(response.headers['refresh']).to.be.undefined;
         }
 
-        expect(response.headers['cache-control']).to.equal('s-maxage=0');
+        expect(response.headers['cache-control']).to.equal(
+          'public, max-age=0, must-revalidate',
+        );
       },
     );
   },
@@ -150,10 +152,10 @@ Cypress.Commands.add(
   'verifyResponseCacheStatus',
   (response: Cypress.Response<any>, shouldBeCached: boolean) => {
     if (shouldBeCached) {
-      expect(response.headers['x-cache']).to.equal('Hit from cloudfront');
+      expect(response.headers['x-vercel-cache']).to.equal('HIT');
     } else {
-      expect(response.headers['x-cache']).to.be.oneOf([
-        'Miss from cloudfront',
+      expect(response.headers['x-vercel-cache']).to.be.oneOf([
+        'MISS',
         'LambdaGeneratedResponse from cloudfront',
       ]);
     }

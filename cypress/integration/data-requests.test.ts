@@ -16,9 +16,9 @@ describe('Data Requests', () => {
               if (i === 1) {
                 cy.verifyResponseCacheStatus(response, true);
               } else {
-                expect(response.headers['x-cache']).to.be.oneOf([
-                  'Miss from cloudfront',
-                  'Hit from cloudfront',
+                expect(response.headers['x-vercel-cache']).to.be.oneOf([
+                  'MISS',
+                  'HIT',
                 ]);
               }
             });
@@ -59,7 +59,9 @@ describe('Data Requests', () => {
           cy.request(fullPath).then((response) => {
             expect(response.status).to.equal(200);
             cy.verifyResponseCacheStatus(response, false);
-            expect(response.headers['cache-control']).to.be.undefined;
+            expect(response.headers['cache-control']).to.equal(
+              'private, no-cache, no-store, max-age=0, must-revalidate',
+            );
           });
         }
       });
